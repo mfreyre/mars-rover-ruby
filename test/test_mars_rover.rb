@@ -1,4 +1,6 @@
 require File.expand_path('../../lib/mars_rover', __FILE__)
+require File.expand_path('../../lib/position', __FILE__)
+require File.expand_path('../../lib/direction', __FILE__)
 
 class TestApp < Minitest::Test
   def setup
@@ -6,38 +8,75 @@ class TestApp < Minitest::Test
   end
 
   def test_left
-    assert_equal ["1 2 W"], @mars_rover.run(["5 5", "1 2 N", "L"])
+    position = Position.new(0,0)
+    direction = Direction.new("North")
+    mars_rover = MarsRover.new position, direction
+    mars_rover.execute(["l"])
+    assert_equal Direction.new("West"), mars_rover.direction
+    assert_equal position, mars_rover.position
   end
 
   def test_right
-    assert_equal ["1 2 E"], @mars_rover.run(["5 5", "1 2 N", "R"])
+    position = Position.new(0,0)
+    direction = Direction.new("North")
+    mars_rover = MarsRover.new position, direction
+    mars_rover.execute(["r"])
+    assert_equal Direction.new("West"), mars_rover.direction
+    assert_equal position, mars_rover.position
   end
 
-  def test_move
-    assert_equal ["1 3 N"], @mars_rover.run(["5 5", "1 2 N", "M"])
+  def test_move_one_forward
+    position = Position.new(0,0)
+    direction = Direction.new("North")
+    mars_rover = MarsRover.new position, direction
+    mars_rover.execute(["f"])
+    assert_equal Direction.new("North"), mars_rover.direction
+    assert_equal Position.new(0, 1), mars_rover.position
   end
 
-  def test_example_first_rover
-    assert_equal ["1 3 N"], @mars_rover.run(["5 5", "1 2 N", "LMLMLMLMM"])
+  def test_move_one_forward_two_backward
+    position = Position.new(0,0)
+    direction = Direction.new("North")
+    mars_rover = MarsRover.new position, direction
+    mars_rover.execute(["f", "b", "b"])
+    assert_equal Direction.new("North"), mars_rover.direction
+    assert_equal Position.new(0, -1), mars_rover.position
   end
 
-  def test_full_example
-    assert_equal ["1 3 N", "5 1 E"], @mars_rover.run(["5 5", "1 2 N", "LMLMLMLMM", "3 3 E", "MMRMMRMRRM"])
+  def test_move_one_forward_two_backward_turn_left
+    position = Position.new(0,0)
+    direction = Direction.new("North")
+    mars_rover = MarsRover.new position, direction
+    mars_rover.execute(["f", "b", "b", "l"])
+    assert_equal Direction.new("West"), mars_rover.direction
+    assert_equal Position.new(0, -1), mars_rover.position
   end
 
-  def test_cannot_escape_north
-    assert_equal ["1 5 N"], @mars_rover.run(["5 5", "1 2 N", "MMMMMMM"])
+  def test_turn_left_and_go_forward
+    position = Position.new(0,0)
+    direction = Direction.new("North")
+    mars_rover = MarsRover.new position, direction
+    mars_rover.execute(["l", "f", "f", "f"])
+    assert_equal Direction.new("West"), mars_rover.direction
+    assert_equal Position.new(-3, 0), mars_rover.position
   end
 
-  def test_cannot_escape_east
-    assert_equal ["5 2 E"], @mars_rover.run(["5 5", "1 2 E", "MMMMMMM"])
+  def test_turn_right_and_go_forward
+    position = Position.new(0,0)
+    direction = Direction.new("North")
+    mars_rover = MarsRover.new position, direction
+    mars_rover.execute(["r", "f", "f", "f"])
+    assert_equal Direction.new("West"), mars_rover.direction
+    assert_equal Position.new(0, 3), mars_rover.position
   end
 
-  def test_cannot_escape_south
-    assert_equal ["1 0 S"], @mars_rover.run(["5 5", "1 2 S", "MMMMMMM"])
+  def test_do_a_lot_of_silly_stuff
+    position = Position.new(0,0)
+    direction = Direction.new("South")
+    mars_rover = MarsRover.new position, direction
+    mars_rover.execute(["r", "f", "f", "f", "b", "r"])
+    assert_equal Direction.new("North"), mars_rover.direction
+    assert_equal Position.new(0, 2), mars_rover.position
   end
 
-  def test_cannot_escape_west
-    assert_equal ["0 2 W"], @mars_rover.run(["5 5", "1 2 W", "MMMMMMM"])
-  end
 end
