@@ -9,14 +9,20 @@ Please develop a program that will calculate the final location of the rover aft
 
 ### Available commands
 "L" -> turn left
+
 "R" -> turn right
+
 "F" -> go forward
+
 "B" -> go backward
 
 ### Cardinal Directions
 East
+
 North 
+
 West
+
 South
 
 ## To Execute Tests:
