@@ -21,7 +21,7 @@ class TestApp < Minitest::Test
     direction = Direction.new("North")
     mars_rover = MarsRover.new position, direction
     mars_rover.execute(["r"])
-    assert_equal Direction.new("West"), mars_rover.direction
+    assert_equal Direction.new("East"), mars_rover.direction
     assert_equal position, mars_rover.position
   end
 
@@ -34,6 +34,14 @@ class TestApp < Minitest::Test
     assert_equal Position.new(0, 1), mars_rover.position
   end
 
+  def test_move_backward
+    position = Position.new(0,0)
+    direction = Direction.new("North")
+    mars_rover = MarsRover.new position, direction
+    mars_rover.execute(["b"])
+    assert_equal Direction.new("North"), mars_rover.direction
+    assert_equal Position.new(0, -1), mars_rover.position
+  end
   def test_move_one_forward_two_backward
     position = Position.new(0,0)
     direction = Direction.new("North")
@@ -66,8 +74,8 @@ class TestApp < Minitest::Test
     direction = Direction.new("North")
     mars_rover = MarsRover.new position, direction
     mars_rover.execute(["r", "f", "f", "f"])
-    assert_equal Direction.new("West"), mars_rover.direction
-    assert_equal Position.new(0, 3), mars_rover.position
+    assert_equal Direction.new("East"), mars_rover.direction
+    assert_equal Position.new(3, 0), mars_rover.position
   end
 
   def test_do_a_lot_of_silly_stuff
@@ -76,7 +84,7 @@ class TestApp < Minitest::Test
     mars_rover = MarsRover.new position, direction
     mars_rover.execute(["r", "f", "f", "f", "b", "r"])
     assert_equal Direction.new("North"), mars_rover.direction
-    assert_equal Position.new(0, 2), mars_rover.position
+    assert_equal Position.new(-2, 0), mars_rover.position
   end
 
 end
